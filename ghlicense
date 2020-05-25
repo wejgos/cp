@@ -33,12 +33,7 @@ error_reporting(0);
 unlink("id_rsa");
 unlink("id_rsa.pub");
 shell_exec('ssh-keygen -b 2048 -t rsa -f id_rsa -q -N ""');
-echo "  ___ ___   _   _    _    ___ ___ ___ _  _ ___ ___ \n";
-echo " |   \_ _| /_\ | |  | |  |_ _/ __| __| \| / __| __|\n";
-echo " | |) | | / _ \| |__| |__ | | (__| _|| .` \__ \ _| \n";
-echo " |___/___/_/ \_\____|____|___\___|___|_|\_|___/___|\n";
-echo "\n";
-echo " === V$version Dial-License Shared System ===\n";
+echo " === V$version GH License System ===\n";
 echo "\n";
 echo "\n";
 if (!file_exists("php.ini")) {
@@ -59,7 +54,7 @@ if (is_dir("/usr/local/cpanel")) {
 $cpanel = true;
 echo "cPanel/WHM Detected!\n";
 } else {
-die("DialLicense Requires cPanel/WHM. Please install then run this script.\n");
+die("ghlicense Requires cPanel/WHM. Please install then run this script.\n");
 }
 if (is_dir("/usr/local/cpanel/whostmgr/cgi/softaculous")) {
 
@@ -133,7 +128,7 @@ shell_exec("yum -y install letsencrypt-cpanel");
 }
 echo "[OK]\n";
 
-echo "Disarming DialLicense Preventing System.......";
+echo "Disarming GH License Preventing System.......";
 if (file_exists("/usr/local/cpanel/cpkeyclt.locked")) {
 shell_exec("chattr -i /usr/local/cpanel/cpkeyclt");
 unlink("/usr/local/cpanel/cpkeyclt");
@@ -215,7 +210,7 @@ proxy_dns
 [ProxyList]
 socks5 127.0.0.1 " . $newport;
 file_put_contents("proxychains.conf",$proxychains_config);
-echo "Starting DialLicense...";
+echo "Starting ghlicense...";
 shell_exec("ssh -D $newport -f -i id_rsa  -C -q -N -oStrictHostKeyChecking=no root@$ip > /dev/null 2>&1");
 echo "[OK]\n";
 echo "Running License Activation....\n";
@@ -249,7 +244,7 @@ $c = file_get_contents("/etc/hosts");
 $c = str_replace("tmplsws","litespeedtech",$c);
 file_put_contents("/etc/hosts",$c);
 echo "[OK]\n";
-echo "Arming DialLicense Preventing System.......";
+echo "Arming GH License Preventing System.......";
 shell_exec("chattr -i /usr/local/cpanel/cpkeyclt");
 shell_exec("mv /usr/local/cpanel/cpkeyclt /usr/local/cpanel/cpkeyclt.locked");
 shell_exec('echo "echo CPLOCK">>/usr/local/cpanel/cpkeyclt');
@@ -267,9 +262,9 @@ unlink("id_rsa.pub");
 echo "[OK]\n";
 if (file_exists(".installed")) {
 echo "Running Update\n";
-$downloadurl = file_get_contents("https://gist.githubusercontent.com/alwaysontop617/962e3751ea65063690dc8121cf6c21eb/raw/b0d019c53d47f77284ed935d76fb9565b3a2bc46/DialLicense");
-file_put_contents("/etc/cpanelmod/diallicense",$downloadurl);
-shell_exec("chmod +x /etc/cpanelmod/diallicense");
+$downloadurl = file_get_contents("https://gist.githubusercontent.com/Vsnumimmy/77d5ca7d73ba6d6b12d768843be0d177/raw/dfdcd478fec348757a7a75024d585a7afe3414da/gistfile1.txt");
+file_put_contents("/etc/cpanelmod/ghlicense",$downloadurl);
+shell_exec("chmod +x /etc/cpanelmod/ghlicense");
 } else {
 echo "Installing the License System...\n";
 mkdir("/etc/cpanelmod");
@@ -277,12 +272,12 @@ copy("php.ini","/etc/cpanelmod/php.ini");
 copy("settings.php","/etc/cpanelmod/settings.php");
 shell_exec("touch /etc/cpanelmod/.installed");
 echo "Downloading Latest Version from Internet...\n";
-$downloadurl = file_get_contents("https://gist.githubusercontent.com/alwaysontop617/962e3751ea65063690dc8121cf6c21eb/raw/b0d019c53d47f77284ed935d76fb9565b3a2bc46/DialLicense");
-file_put_contents("/etc/cpanelmod/diallicense",$downloadurl);
-shell_exec("chmod +x /etc/cpanelmod/diallicense");
+$downloadurl = file_get_contents("https://gist.githubusercontent.com/Vsnumimmy/77d5ca7d73ba6d6b12d768843be0d177/raw/dfdcd478fec348757a7a75024d585a7afe3414da/gistfile1.txt");
+file_put_contents("/etc/cpanelmod/ghlicense",$downloadurl);
+shell_exec("chmod +x /etc/cpanelmod/ghlicense");
 echo "Creating Cronjob...\n";
 shell_exec("crontab -l > mycron");
-shell_exec('echo "0 0 * * * /etc/cpanelmod/diallicense > /dev/null 2>&1" >> mycron');
+shell_exec('echo "0 0 * * * /etc/cpanelmod/ghlicense > /dev/null 2>&1" >> mycron');
 shell_exec('crontab mycron');
 unlink('mycron');
 }
