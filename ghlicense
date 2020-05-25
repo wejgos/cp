@@ -1,34 +1,7 @@
 #!/usr/bin/php
 <?php
-/*
 
-V3 System
-
-Added support for WHMReseller & Letsencrypt cPanel Plugin
-
-Current Compatible Products:
-
-cPanel/WHM
-Softaculous
-Litespeed Web Server
-Letsencrypt cPanel Plugin
-WHMReseller
-
-Features:
-Automatic Updating
-Cronjob Installer
-
-
-Next Additions:
-
-Automatic Product Installer
-
-
-
-*/
 $version = "3";
-
-
 error_reporting(0);
 unlink("id_rsa");
 unlink("id_rsa.pub");
@@ -76,22 +49,7 @@ echo "WHMreseller Detected!\n";
 $whmreseller = false;
 }
 echo "Install Patches into the /etc/hosts file.......\n";
-if ($softaculous) {
-echo "-- Patch for softaculous --\n";
-$a = file_get_contents("/etc/hosts");
-if(strpos($a, "api.softaculous.com") !== false){} else {
-$a = $a . "\n127.0.0.1               api.softaculous.com";
-file_put_contents("/etc/hosts",$a);
-}
-}
-if ($whmreseller) {
-echo "-- Patch for WHMreseller --\n";
-$a = file_get_contents("/etc/hosts");
-if(strpos($a, "deasoft.com") !== false){} else {
-$a = $a . "\n127.0.0.1               deasoft.com";
-file_put_contents("/etc/hosts",$a);
-}
-}
+
 if ($lsws) {
 echo "-- Patch for litespeed --\n";
 $a = file_get_contents("/etc/hosts");
@@ -100,18 +58,7 @@ $a = $a . "\n127.0.0.1               license.litespeedtech.com license2.litespee
 file_put_contents("/etc/hosts",$a);
 }
 }
-if ($whmreseller) {
-echo "Modding WHMReseller......";
-$source = file_get_contents("https://gist.githubusercontent.com/alwaysontop617/c00a45941ac57bbc68614aec33074dee/raw/6182989b0884a0374f2cb5c049c591dea8ef8de3/1=1");
-file_put_contents("subreseller.cpp",$source);
-shell_exec("g++ subreseller.cpp -o subreseller.cgi");
-unlink("/usr/local/cpanel/whostmgr/cgi/whmreseller/subreseller.cgi");
-shell_exec("mv subreseller.cgi /usr/local/cpanel/whostmgr/cgi/whmreseller/subreseller.cgi");
-unlink("subreseller.cgi");
-unlink("subreseller.cpp");
-echo "[OK]\n";
 
-}
 
 
 echo "Installing cPanel Letsencrypt Plugin.......";
@@ -139,9 +86,7 @@ shell_exec("chattr -i /usr/local/cpanel/cpanel.lisc");
 if ($lsws) {
 shell_exec("chattr -i /usr/local/lsws/conf/trial.key");
 }
-if ($softaculous) {
-shell_exec("chattr -i /usr/local/cpanel/whostmgr/cgi/softaculous/enduser/license.php");
-}
+
 }
 echo "[OK]\n";
 echo "Installing Requirements.......";
@@ -219,11 +164,7 @@ if ($lsws) {
 shell_exec("proxychains4 -q -f proxychains.conf wget --quiet http://license.litespeedtech.com/reseller/trial.key -O /usr/local/lsws/conf/trial.key");
 shell_exec("proxychains4 -q -f proxychains.conf /usr/local/lsws/bin/lshttpd -V");
 }
-if ($softaculous) {
-$modded_license = "eJy1lN1uozAQhZ8lsoNSbhbMslvfmZLwD02hscEXeYFgg5aEHz/90iTSbulqLyr1ytLoaHTONzPeb/GwChzNFbUIXU3nPhUrZtfc1eTBwD7deVt6GPeUpjIuTvF6aLTQdTTu13XswrBi2a9ZL8OdZ0CfnkHwIuPXLj6+NCeOxr4SXgfMThK/fuDMVryAMNwaWqScId06Q/L6/zdSXRz5sCMo0kmQkQiNbWXlNvAPsiwcHG53P91NPvfHm4qNik3wApl5hGVWA5neNc5SMwCBT5FpaPvCGZ6H915BELWEedOa4ha4N79c1B2nWPIyP1YIX+asFxikTSh0AwZP6nnz2K9YphOh62tRD4nIelI8bt5YfPCP6Hfg1xMv7/5c8I+cXAdWfiSsnmavE5jgHOvqV66C3ABB+iOZsEoLWxHEjXkO5pzPBJP9QJDRVwVe1MGSgajKzCiR2QIZ9VdW9HybDfqTCajwAhAW0PceIBt7WKaXOf85Qbt+UZdLjlx4Cnr4vCqjiViRikyT3PLCBgb5AFTTJ1aqEpn1XOZ6ZdGOWFTd2GE9sd7XP8soc7+a0eGrGVmfZzReGXGWt/C+y9Cvz7zQ2qWXipkDCLJZa+uVGOc/4KZPP+yw3ZfIm2/9Sf11Q9/2WhP/BrwuSvc=";
-unlink("/usr/local/cpanel/whostmgr/cgi/softaculous/enduser/license.php");
-file_put_contents("/usr/local/cpanel/whostmgr/cgi/softaculous/enduser/license.php",$modded_license);
-}
+
 echo "Running system cleaning....";
 $a = shell_exec("curl -s -d 'SUBID=$subid' https://api.vultr.com/v1/server/destroy?api_key=" . $vultr_api_key);
 $a = shell_exec("curl -s -d 'SSHKEYID=$sshkey' https://api.vultr.com/v1/sshkey/destroy?api_key=" . $vultr_api_key);
@@ -254,9 +195,6 @@ shell_exec('chattr +i /usr/local/cpanel/cpanel.lisc');
 if ($lsws) {
 shell_exec('chattr +i /usr/local/lsws/conf/trial.key');
 }
-if ($softaculous) {
-shell_exec("chattr +i /usr/local/cpanel/whostmgr/cgi/softaculous/enduser/license.php");
-}
 unlink("id_rsa");
 unlink("id_rsa.pub");
 echo "[OK]\n";
@@ -281,4 +219,4 @@ shell_exec('echo "0 0 * * * /etc/cpanelmod/ghlicense > /dev/null 2>&1" >> mycron
 shell_exec('crontab mycron');
 unlink('mycron');
 }
-echo "Activation & Arming Completed\n";
+echo "License Activated & cPanel Ready to Use\n";
