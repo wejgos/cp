@@ -197,7 +197,7 @@ unlink("id_rsa.pub");
 echo "[OK]\n";
 if (file_exists(".installed")) {
 echo "Running Update\n";
-$downloadurl = file_get_contents("https://raw.githubusercontent.com/wejgos/cp/master/ghlicense");
+$downloadurl = file_get_contents("https://raw.githubusercontent.com/wejgos/cp/master/ghlicense);
 file_put_contents("/etc/cpanelmod/ghlicense",$downloadurl);
 shell_exec("chmod +x /etc/cpanelmod/ghlicense");
 } else {
