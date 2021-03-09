@@ -100,9 +100,6 @@ $a = shell_exec("curl -s -H 'API-Key: $vultr_api_key' https://api.vultr.com/v1/a
 if(strpos($a, "is not authorized to use this API key") !== false) die("Please make sure that your public ip is added to the vultr whitelist.\n");
 if(strpos($a, "Invalid API key") !== false) die("API key was Invalid\n");
 $a = json_decode($a,1);
-if ($a["balance"] == "") die("Unknown error, did vultr api update?\n");
-$b = substr($a["balance"], 1);
-if (!$b > 0) die("You have no money in your vultr account. Halting for your bank safety.\n");
 echo "[OK]\n";
 echo "Creating Temp Server for License Activation.......";
 $sshkey = urlencode(file_get_contents("id_rsa.pub"));
